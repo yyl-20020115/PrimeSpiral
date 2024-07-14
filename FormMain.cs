@@ -46,16 +46,16 @@ public partial class FormMain : Form
         int point_count = 0;
         //Center Point First
         int r = 1;
-        int min_r = Math.Max(bitmap.Width, bitmap.Height);
+        int max_r = Math.Max(bitmap.Width, bitmap.Height);
         long n = 0;
         var direction = Directions.Up;
         do
         {
-            for (uint c = 0; c < 2; c++)
+            for (int t = 0; t < 2; t++)
             {
                 direction = MakeTurn(direction);
 
-                for (uint i = 0; i < r; i++)
+                for (int i = 0; i < r; i++)
                 {
                     var prime = IsPrime(n);
                     writer.WriteLine($"({cp.X},{cp.Y})={n},{(prime?1:0)}");
@@ -70,9 +70,9 @@ public partial class FormMain : Form
                         else
                         {
                             bitmap.SetPixel(cp.X, cp.Y, Color.FromArgb(
-                                GetRatioPart(r, min_r),
-                                GetRatioPart(r, min_r),
-                                GetRatioPart(r, min_r)));
+                                GetRatioPart(r, max_r),
+                                GetRatioPart(r, max_r),
+                                GetRatioPart(r, max_r)));
                         }
                         point_count++;
                     }
