@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "PrimeSpiral": {
+      "commandName": "Project",
+      "workingDirectory": "$(ProjectDir)"
+    }
+  }
+}
