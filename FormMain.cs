@@ -39,28 +39,35 @@ public partial class FormMain : Form
     }
     private void ButtonGenerate_Click(object sender, EventArgs e)
     {
+        int length = Math.Min(this.pictureBox.Width, this.pictureBox.Height);
         using var writer = new StreamWriter("Points.txt");
-        var bitmap = new Bitmap(this.pictureBox.Width, this.pictureBox.Height);
-        var cp = new Point(bitmap.Width / 2, bitmap.Height / 2);
+        var bitmap = new Bitmap(length, length);
+        var op = new Point(bitmap.Width / 2, bitmap.Height / 2);
+        var cp = op;
         int max_count = bitmap.Height * bitmap.Height;
-        int point_count = 0;
+        int points = 0;
         //Center Point First
         int r = 1;
         int max_r = Math.Max(bitmap.Width, bitmap.Height);
+        int min_r = Math.Min(bitmap.Width, bitmap.Height);
         long n = 0;
         var direction = Directions.Up;
+        int sum = 0;
+        int vacancy = 0;
         do
         {
+            int m = 0;
             for (int t = 0; t < 2; t++)
             {
                 direction = MakeTurn(direction);
-
                 for (int i = 0; i < r; i++)
                 {
                     var prime = IsPrime(n);
-                    writer.WriteLine($"({cp.X},{cp.Y})={n},{(prime?1:0)}");
+                    var dp = new Point(cp.X - op.X,cp.Y-op.Y);
+                    writer.WriteLine($"({cp.X},{cp.Y}),({dp.X},{dp.Y})={n},{(prime?1:0)}");
                     cp = Step(cp, direction);
                     n++;
+                    m++;
                     if (cp.X >= 0 && cp.Y >= 0 && cp.X < bitmap.Width && cp.Y < bitmap.Height)
                     {
                         if (prime)
@@ -74,14 +81,20 @@ public partial class FormMain : Form
                                 GetRatioPart(r, max_r),
                                 GetRatioPart(r, max_r)));
                         }
-                        point_count++;
                     }
+                    else
+                    {
+                        vacancy++;
+                    }
+                    points++;
                 }
             }
+            sum += m;
+            writer.WriteLine($"r={r},m={m},sum={sum},points={points}");
             r++;
 
-        } while (point_count < max_count);
-
+        } while (points < max_count);
+        writer.WriteLine($"points:{points},vacancy={vacancy},max_s={max_r * max_r},min_s={min_r * min_r}");
         this.pictureBox.Image = bitmap;
     }
 }
